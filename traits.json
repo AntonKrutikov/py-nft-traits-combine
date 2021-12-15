@@ -1,0 +1,56 @@
+{
+    "head": {
+        "Head 1": {
+            "weight": 1,
+            "file": "input/head-1.png"
+        },
+        "Head 2": {
+            "weight": 1,
+            "file": "input/head-2.png"
+        },
+        "Head 3": {
+            "weight": 1,
+            "file": "input/head-3.png"
+        }
+    },
+    "body": {
+        "Body 1": {
+            "weight": 1,
+            "file": "input/body-1.png"
+        }
+    },
+    "hand": {
+        "Left": {
+            "weight": 1,
+            "file": "input/left-hand-1.png"
+        },
+        "Right": {
+            "weight": 1,
+            "file": "input/right-hand-1.png"
+        },
+        "Both": {
+            "weight": 1,
+            "file": ["input/left-hand-1.png", "input/right-hand-1.png"]
+        }
+    },
+    "foot": {
+        "Left": {
+            "weight": 1,
+            "file": "input/left-foot-1.png"
+        },
+        "Right": {
+            "weight": 1,
+            "file": "input/right-foot-1.png"
+        },
+        "Both": {
+            "weight": 1,
+            "file": ["input/left-foot-1.png", "input/right-foot-1.png"]
+        }
+    },
+    "glasses":{
+        "default": {
+            "weight": 1,
+            "file": "input/glasses.svg"
+        }
+    }
+}

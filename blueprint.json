@@ -1,0 +1,51 @@
+{
+  "name": "My Name #01",
+  "symbol": "",
+  "description": "",
+  "seller_fee_basis_points": 0,
+  "image": "",
+  "animation_url": "",
+  "external_url": "",
+  "attributes": [
+    {
+      "trait_type": "skin_color",
+      "value": "Skin Color C"
+    },
+    {
+      "trait_type": "tattoo",
+      "value": "Tattoo A"
+   },
+   {
+      "trait_type": "eyes",
+      "value": "Eyes C"
+    }
+  ],
+  "collection": {
+     "name": "Some Name",
+     "family": "Some Familiy"
+  },
+  "properties": {
+    "files": [
+      {
+        "uri": "",
+        "type": "image/png"
+      },
+      {
+        "uri": "",
+        "type": "unknown",
+        "cdn": true
+      },
+      {
+        "uri": "https://www.arweave.net/efgh1234?ext=mp4",
+        "type": "video/mp4"
+      }
+    ],
+    "category": "video",
+    "creators": [
+      {
+        "address": "123456",
+        "share": 100
+      }
+    ]
+  }
+}
