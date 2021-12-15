@@ -17,9 +17,9 @@ parser.add_argument('--csv', help='CSV file with list of NFT combination', defau
 parser.add_argument('--traits', help='JSON description of traits', default='traits.json')
 parser.add_argument('--blueprint', help='JSON template for generating output json file', default='blueprint.json')
 parser.add_argument('--out', help='Output folder for results', default='out')
-parser.add_argument('--svg-width', help='Default svg width when convert to png, if svg used as background layer', default=1080)
-parser.add_argument('--svg-height', help='Default svg height when convert to png, if svg used as background layer', default=1080)
-parser.add_argument('--use-names', help='Default svg height when convert to png, if svg used as background layer', default=None)
+parser.add_argument('--svg-width', help='Default svg width when convert to png, if svg used as background layer', default=1080, type=int)
+parser.add_argument('--svg-height', help='Default svg height when convert to png, if svg used as background layer', default=1080, type=int)
+parser.add_argument('--use-names', help='Default svg height when convert to png, if svg used as background layer', action='store_true')
 parser.add_argument('item', help='Default svg height when convert to png, if svg used as background layer', default=None, type=int, nargs='?')
 
 args = parser.parse_args()
@@ -85,7 +85,7 @@ for item in collection:
         continue
 
     outpath = "%s/%s" % (args.out,indx)
-    if args.use_names is not None:
+    if args.use_names == True:
         outpath = "%s/%s" % (args.out,item['name'])
 
     blueprint['name'] = item['name']
