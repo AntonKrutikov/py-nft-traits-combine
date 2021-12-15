@@ -20,7 +20,7 @@ parser.add_argument('--out', help='Output folder for results', default='out')
 parser.add_argument('--svg-width', help='Default svg width when convert to png, if svg used as background layer', default=1080)
 parser.add_argument('--svg-height', help='Default svg height when convert to png, if svg used as background layer', default=1080)
 parser.add_argument('--use-names', help='Default svg height when convert to png, if svg used as background layer', default=None)
-parser.add_argument('item', help='Default svg height when convert to png, if svg used as background layer', default=None, type=int)
+parser.add_argument('item', help='Default svg height when convert to png, if svg used as background layer', default=None, type=int, nargs='?')
 
 args = parser.parse_args()
 
@@ -77,10 +77,10 @@ with open(args.blueprint) as json_file:
     blueprint = json.load(json_file)
 
 indx = 1
+saved = 0
 for item in collection:
 
     if args.item is not None and args.item != indx:
-        print(args.item,indx)
         indx+=1
         continue
 
@@ -104,11 +104,10 @@ for item in collection:
                     alpha_img.paste(img, (0,0))
                     background = Image.alpha_composite(background, alpha_img)
     background.save("%s.png" % outpath)
+    saved+=1
 
     with open("%s.json" % outpath, 'w') as outfile:
         json.dump(blueprint, outfile)
     indx+=1
 
-
-print(collection)
-
+print("Generated %s items" % saved)
