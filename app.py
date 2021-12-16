@@ -5,6 +5,7 @@ import json
 import os
 from PIL import Image, ImageFile
 from cairosvg import svg2png
+from tqdm import tqdm
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -95,41 +96,41 @@ blueprint = None
 with open(args.blueprint) as json_file:
     blueprint = json.load(json_file)
 
+#If item arg proided - reduce collection to 1 item
+if args.item is not None:
+    collection = [collection[args.item-1]]
 indx = 1
 saved = 0
-for item in collection:
+with tqdm(total=len(collection)) as pbar:
+    for item in collection:
+        outpath = "%s/%s" % (args.out,indx)
+        if args.use_names == True:
+            outpath = "%s/%s" % (args.out,item['name'])
 
-    if args.item is not None and args.item != indx:
+        blueprint['name'] = item['name']
+        blueprint['attributes'] = []
+
+        if args.attribute_number == True:
+            blueprint['attributes'].append({"trait_type":"attribute-number", "value":item["attribute-number"]})
+
+        background = None
+        for name,trait in item['traits'].items():
+            blueprint['attributes'].append({"trait_type": name, "value": trait['name']})
+            for file in trait['files']:
+                if os.path.isfile(file):
+                    if background == None:
+                        background = open_img_file(file).convert('RGBA')
+                    else:
+                        img = open_img_file(file, background)
+                        alpha_img = Image.new('RGBA', background.size)
+                        alpha_img.paste(img, (0,0))
+                        background = Image.alpha_composite(background, alpha_img)
+        background.save("%s.png" % outpath)
+        saved+=1
+
+        with open("%s.json" % outpath, 'w') as outfile:
+            json.dump(blueprint, outfile)
         indx+=1
-        continue
-
-    outpath = "%s/%s" % (args.out,indx)
-    if args.use_names == True:
-        outpath = "%s/%s" % (args.out,item['name'])
-
-    blueprint['name'] = item['name']
-    blueprint['attributes'] = []
-
-    if args.attribute_number == True:
-        blueprint['attributes'].append({"trait_type":"attribute-number", "value":item["attribute-number"]})
-
-    background = None
-    for name,trait in item['traits'].items():
-        blueprint['attributes'].append({"trait_type": name, "value": trait['name']})
-        for file in trait['files']:
-            if os.path.isfile(file):
-                if background == None:
-                    background = open_img_file(file).convert('RGBA')
-                else:
-                    img = open_img_file(file, background)
-                    alpha_img = Image.new('RGBA', background.size)
-                    alpha_img.paste(img, (0,0))
-                    background = Image.alpha_composite(background, alpha_img)
-    background.save("%s.png" % outpath)
-    saved+=1
-
-    with open("%s.json" % outpath, 'w') as outfile:
-        json.dump(blueprint, outfile)
-    indx+=1
+        pbar.update(1)
 
 print("Generated %s items" % saved)
