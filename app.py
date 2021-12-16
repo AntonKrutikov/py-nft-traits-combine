@@ -11,17 +11,23 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 description="""NFT collection generator
 
 Default input list: collection.csv
+    Default name for 1 column is "name" and it used as name field in result json
+    Default name for last column is "attribute_number" and it stored in result json if --attribute-name key exists
+    All columns between first and last interpreted as traits columns
 Default traits description: traits.json
 Default out directory: ./out
 """
 parser = argparse.ArgumentParser(description=description, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument('--csv', help='CSV file with list of NFT combination', default='collection.csv')
+parser.add_argument('--first-column', help='Name of first column in CSV (used as name)', default='name')
+parser.add_argument('--last-column', help='Name of last column in CSV (used as attribute_number)', default='attribute_number')
 parser.add_argument('--traits', help='JSON description of traits', default='traits.json')
 parser.add_argument('--blueprint', help='JSON template for generating output json file', default='blueprint.json')
 parser.add_argument('--out', help='Output folder for results', default='out')
 parser.add_argument('--svg-width', help='Default svg width when convert to png, if svg used as background layer', default=1080, type=int)
 parser.add_argument('--svg-height', help='Default svg height when convert to png, if svg used as background layer', default=1080, type=int)
 parser.add_argument('--use-names', help='Default svg height when convert to png, if svg used as background layer', action='store_true')
+parser.add_argument('--attribute-number', help='Store or not attribute_number column to result json', action='store_true')
 parser.add_argument('item', help='Default svg height when convert to png, if svg used as background layer', default=None, type=int, nargs='?')
 
 args = parser.parse_args()
@@ -37,12 +43,23 @@ with open(args.csv, 'r') as csvfile:
     for row in reader:
         if rn == 0:
             header = row
-            traits_name_index = header.index('name')
-            traits_attributes_index = header.index('attribute_number')
+            try:
+                traits_name_index = header.index(args.first_column)
+            except ValueError as err:
+                print("Can't find first column with given name. Please provide column, that will be used as 'name' column and start index")
+                print("ValueError: %s" % err)
+                exit()
+            try:
+                traits_attributes_index = header.index(args.last_column)
+            except ValueError as err:
+                print("Can't find last column with given name. Please provide column, that will be used as 'attribute_number' column and end index")
+                print("ValueError: %s" % err)
+                exit()
             rn+=1
         else:
             item = {}
             item['name'] = row[traits_name_index]
+            item['attribute-number'] = row[traits_attributes_index]
             item['traits'] = dict(zip(header[traits_name_index+1:traits_attributes_index],row[traits_name_index+1:traits_attributes_index])) #obtain all columns between name and attribute_number
             collection.append(item)
 
@@ -92,6 +109,9 @@ for item in collection:
 
     blueprint['name'] = item['name']
     blueprint['attributes'] = []
+
+    if args.attribute_number == True:
+        blueprint['attributes'].append({"trait_type":"attribute-number", "value":item["attribute-number"]})
 
     background = None
     for name,trait in item['traits'].items():
