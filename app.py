@@ -3,8 +3,10 @@ import csv
 from io import BytesIO
 import json
 import os
-from PIL import Image
+from PIL import Image, ImageFile
 from cairosvg import svg2png
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 description="""NFT collection generator
 
