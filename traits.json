@@ -2,7 +2,8 @@
     "head": {
         "Head 1": {
             "weight": 1,
-            "file": "input/head-1.png"
+            "file": "input/head-1.png",
+            "hidden": true
         },
         "Head 2": {
             "weight": 1,

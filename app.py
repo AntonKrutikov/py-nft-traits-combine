@@ -74,7 +74,7 @@ for item in collection:
     for k,v in list(item['traits'].items()):
         if v != "":
             files = traits[k][v]['file']
-            item['traits'][k] = {"name": v, "files": files if isinstance(files, list) else [files]}
+            item['traits'][k] = {"name": v, "files": files if isinstance(files, list) else [files], "hidden": traits[k][v].get('hidden', False)}
         else:
             del item['traits'][k] #if empty trait name - remove from collection
 
@@ -115,7 +115,8 @@ with tqdm(total=len(collection)) as pbar:
 
         background = None
         for name,trait in item['traits'].items():
-            blueprint['attributes'].append({"trait_type": name, "value": trait['name']})
+            if trait['hidden'] == False:
+                blueprint['attributes'].append({"trait_type": name, "value": trait['name']})
             for file in trait['files']:
                 if os.path.isfile(file):
                     if background == None:
@@ -134,3 +135,5 @@ with tqdm(total=len(collection)) as pbar:
         pbar.update(1)
 
 print("Generated %s items" % saved)
+
+print(collection)
