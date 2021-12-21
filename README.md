@@ -26,3 +26,10 @@ options:
   --use-names USE_NAMES
                         Default svg height when convert to png, if svg used as background layer
 ```
+
+Order of searching filepaths in traits.json:
+
+1. If "file" is object and conditional key exists and csv line matched this condition - than this filepath will be taken with highest priority.
+2. If "file" is object without condition, path key will be taken with basic priority
+3. If "file" is array of strings, all strings will be taken as path with basic priority
+4. If "file" is string, this string will be taken as path with basic priority
