@@ -3,9 +3,11 @@ import csv
 from io import BytesIO
 import json
 import os
+from threading import Condition
 from PIL import Image, ImageFile
 from cairosvg import svg2png
 from tqdm import tqdm
+import collections
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -67,14 +69,37 @@ with open(args.csv, 'r') as csvfile:
 #Load traits description
 traits = None
 with open(args.traits) as json_file:
-    traits = json.load(json_file)
+    traits = json.load(json_file, object_pairs_hook=collections.OrderedDict)
 
 #Add filenames of traits to collection
 for item in collection:
+    original_traits = item['traits'].copy() #needed for simplier checking conditional files
     for k,v in list(item['traits'].items()):
         if v != "":
             files = traits[k][v]['file']
-            item['traits'][k] = {"name": v, "files": files if isinstance(files, list) else [files], "hidden": traits[k][v].get('hidden', False)}
+            item['traits'][k] = {"name": v, "hidden": traits[k][v].get('hidden', False)}
+            #single file as string
+            if isinstance(files, str):
+                item['traits'][k]["files"] = {"condition":[], "path": [files]}
+            #array of files or conditional files
+            if isinstance(files, list):
+                match_files = []
+                for f in files:
+                    #search if suitable conditions, overwrite any overs
+                    if isinstance(f, dict) and 'condition' in f:
+                        condition = f['condition'] if isinstance(f['condition'],list) else [f['condition']]
+                        for c in condition:
+                            for _,t in original_traits.items():
+                                if c == t:
+                                    match_files = {"condition":condition, "path": f['path'] if isinstance(f['path'], list) else [f['path']]}
+                    #search for default in object style, array style or string style. Takes first match
+                    elif isinstance(f, dict) and 'condition' not in f and len(match_files) == 0:
+                        match_files = {"condition":[], "path": f['path'] if isinstance(f['path'], list) else [f['path']]}
+                    elif isinstance(f, list) and len(match_files) == 0:
+                        match_files = {"condition":[], "path": f}
+                    elif isinstance(f, str) and len(match_files) == 0:
+                        match_files = {"condition":[], "path": [f]}
+                item['traits'][k]["files"] = match_files
         else:
             del item['traits'][k] #if empty trait name - remove from collection
 
@@ -117,7 +142,7 @@ with tqdm(total=len(collection)) as pbar:
         for name,trait in item['traits'].items():
             if trait['hidden'] == False:
                 blueprint['attributes'].append({"trait_type": name, "value": trait['name']})
-            for file in trait['files']:
+            for file in trait['files']['path']:
                 if os.path.isfile(file):
                     if background == None:
                         background = open_img_file(file).convert('RGBA')
@@ -135,5 +160,3 @@ with tqdm(total=len(collection)) as pbar:
         pbar.update(1)
 
 print("Generated %s items" % saved)
-
-print(collection)

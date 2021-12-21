@@ -17,7 +17,21 @@
     "body": {
         "Body 1": {
             "weight": 1,
-            "file": "input/body-1.png"
+            "file": [
+                ["input/body-1.png"],
+                {
+                    "path": "input/glasses.svg"
+                },
+                {
+                    "condition": ["Head 1"],
+                    "path": "input/right-hand-1-red.png"
+                },
+                {
+                    "condition": ["Head 2"],
+                    "path": "input/glasses.svg"
+                }
+                
+            ]
         }
     },
     "hand": {
@@ -27,7 +41,13 @@
         },
         "Right": {
             "weight": 1,
-            "file": "input/right-hand-1.png"
+            "file": [
+                "input/right-hand-1.png",
+                {
+                    "condition": ["Head 2"],
+                    "path": "input/right-hand-1-red.png"
+                }
+            ]
         },
         "Both": {
             "weight": 1,
