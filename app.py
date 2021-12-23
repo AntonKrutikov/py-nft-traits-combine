@@ -29,9 +29,9 @@ parser.add_argument('--blueprint', help='JSON template for generating output jso
 parser.add_argument('--out', help='Output folder for results', default='out')
 parser.add_argument('--svg-width', help='Default svg width when convert to png, if svg used as background layer', default=1080, type=int)
 parser.add_argument('--svg-height', help='Default svg height when convert to png, if svg used as background layer', default=1080, type=int)
-parser.add_argument('--use-names', help='Default svg height when convert to png, if svg used as background layer', action='store_true')
+parser.add_argument('--use-names', help='Use name column from csv as out filename', action='store_true')
 parser.add_argument('--attribute-number', help='Store or not attribute_number column to result json', action='store_true')
-parser.add_argument('item', help='Default svg height when convert to png, if svg used as background layer', default=None, type=int, nargs='?')
+parser.add_argument('item', help='Index in input csv file to provide only this result instead of all output', default=None, type=int, nargs='?')
 
 args = parser.parse_args()
 
