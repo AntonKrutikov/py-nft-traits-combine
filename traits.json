@@ -24,11 +24,11 @@
                     "path": "input/glasses.svg"
                 },
                 {
-                    "condition": ["Head 1"],
+                    "adapted-to": ["Head 1"],
                     "path": "input/right-hand-1-red.png"
                 },
                 {
-                    "condition": ["Head 2"],
+                    "adapted-to": ["Head 2"],
                     "path": "input/glasses.svg"
                 }
                 
@@ -45,7 +45,7 @@
             "file": [
                 "input/right-hand-1.png",
                 {
-                    "condition": ["Head 2"],
+                    "adapted-to": ["Head 2"],
                     "path": "input/right-hand-1-red.png"
                 }
             ]

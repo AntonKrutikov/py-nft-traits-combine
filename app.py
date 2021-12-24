@@ -86,14 +86,14 @@ for item in collection:
                 match_files = []
                 for f in files:
                     #search if suitable conditions, overwrite any overs
-                    if isinstance(f, dict) and 'condition' in f:
-                        condition = f['condition'] if isinstance(f['condition'],list) else [f['condition']]
+                    if isinstance(f, dict) and 'adapted-to' in f:
+                        condition = f['adapted-to'] if isinstance(f['adapted-to'],list) else [f['adapted-to']]
                         for c in condition:
                             for _,t in original_traits.items():
                                 if c == t:
                                     match_files = {"condition":condition, "path": f['path'] if isinstance(f['path'], list) else [f['path']]}
                     #search for default in object style, array style or string style. Takes first match
-                    elif isinstance(f, dict) and 'condition' not in f and len(match_files) == 0:
+                    elif isinstance(f, dict) and 'adapted-to' not in f and len(match_files) == 0:
                         match_files = {"condition":[], "path": f['path'] if isinstance(f['path'], list) else [f['path']]}
                     elif isinstance(f, list) and len(match_files) == 0:
                         match_files = {"condition":[], "path": f}
