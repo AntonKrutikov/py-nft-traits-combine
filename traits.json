@@ -7,7 +7,8 @@
         },
         "Head 2": {
             "weight": 1,
-            "file": "input/head-2.png"
+            "file": "input/head-2.png",
+            "excluded": ["Hand Left"]
         },
         "Head 3": {
             "weight": 1,
@@ -35,11 +36,11 @@
         }
     },
     "hand": {
-        "Left": {
+        "Hand Left": {
             "weight": 1,
             "file": "input/left-hand-1.png"
         },
-        "Right": {
+        "Hand Right": {
             "weight": 1,
             "file": [
                 "input/right-hand-1.png",
@@ -49,7 +50,7 @@
                 }
             ]
         },
-        "Both": {
+        "Hand Both": {
             "weight": 1,
             "file": ["input/left-hand-1.png", "input/right-hand-1.png"]
         }

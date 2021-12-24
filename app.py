@@ -75,9 +75,9 @@ with open(args.traits) as json_file:
 for item in collection:
     original_traits = item['traits'].copy() #needed for simplier checking conditional files
     for k,v in list(item['traits'].items()):
-        if v != "":
+        if v != "" and k in traits and v in traits[k]:
             files = traits[k][v]['file']
-            item['traits'][k] = {"name": v, "hidden": traits[k][v].get('hidden', False)}
+            item['traits'][k] = {"name": v, "hidden": traits[k][v].get('hidden', False), "excluded": traits[k][v].get('excluded', []) }
             #single file as string
             if isinstance(files, str):
                 item['traits'][k]["files"] = {"condition":[], "path": [files]}
@@ -100,6 +100,11 @@ for item in collection:
                     elif isinstance(f, str) and len(match_files) == 0:
                         match_files = {"condition":[], "path": [f]}
                 item['traits'][k]["files"] = match_files
+            #check excluded
+            for e in item['traits'][k]['excluded']:
+                for _,t in original_traits.items():
+                    if t == e:
+                        del item['traits'][k]
         else:
             del item['traits'][k] #if empty trait name - remove from collection
 
