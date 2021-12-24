@@ -104,20 +104,10 @@ for item in collection:
             for e in item['traits'][k]['exclude']:
                 for _,t in original_traits.items():
                     if t == e:
-                        # del item['traits'][k]
-                        # Not delete raise error message and exit
-                        print("Error: Found exclude '%s' option for trait '%s'.'%s', but this exists in input CSV row. Item with name '%s' skipped." % (e, k,v, item['name']))
-                        item['broken'] = True
+                        item['broken'] = {"exclude": e, "group": k, "trait": v}
     
         else:
             del item['traits'][k] #if empty trait name - remove from collection
-
-for item in collection:
-    if 'broken' in item:
-        
-        collection.remove(item)
-
-print(len(collection))
 
 # Generate Images and create json file from temlate
 def open_img_file(filepath, background=None):
@@ -143,6 +133,9 @@ indx = 1
 saved = 0
 with tqdm(total=len(collection)) as pbar:
     for item in collection:
+        if 'broken' in item:
+            print("Error: Broken nft item. Item with name '%s' skipped, because exclude '%s' in '%s'.'%s' exists in input CSV row. " % (item['name'], item['broken']['exclude'], item['broken']['group'], item['broken']['trait']))
+            continue
         outpath = "%s/%s" % (args.out,indx)
         if args.use_names == True:
             outpath = "%s/%s" % (args.out,item['name'])
