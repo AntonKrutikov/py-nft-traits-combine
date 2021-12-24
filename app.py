@@ -77,7 +77,7 @@ for item in collection:
     for k,v in list(item['traits'].items()):
         if v != "" and k in traits and v in traits[k]:
             files = traits[k][v]['file']
-            item['traits'][k] = {"name": v, "hidden": traits[k][v].get('hidden', False), "excluded": traits[k][v].get('exclude', []) }
+            item['traits'][k] = {"name": v, "hidden": traits[k][v].get('hidden', False), "exclude": traits[k][v].get('exclude', []) }
             #single file as string
             if isinstance(files, str):
                 item['traits'][k]["files"] = {"condition":[], "path": [files]}
@@ -104,10 +104,20 @@ for item in collection:
             for e in item['traits'][k]['exclude']:
                 for _,t in original_traits.items():
                     if t == e:
-                        del item['traits'][k]
+                        # del item['traits'][k]
+                        # Not delete raise error message and exit
+                        print("Error: Found exclude '%s' option for trait '%s'.'%s', but this exists in input CSV row. Item with name '%s' skipped." % (e, k,v, item['name']))
+                        item['broken'] = True
+    
         else:
             del item['traits'][k] #if empty trait name - remove from collection
 
+for item in collection:
+    if 'broken' in item:
+        
+        collection.remove(item)
+
+print(len(collection))
 
 # Generate Images and create json file from temlate
 def open_img_file(filepath, background=None):
