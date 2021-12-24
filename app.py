@@ -77,7 +77,7 @@ for item in collection:
     for k,v in list(item['traits'].items()):
         if v != "" and k in traits and v in traits[k]:
             files = traits[k][v]['file']
-            item['traits'][k] = {"name": v, "hidden": traits[k][v].get('hidden', False), "excluded": traits[k][v].get('excluded', []) }
+            item['traits'][k] = {"name": v, "hidden": traits[k][v].get('hidden', False), "excluded": traits[k][v].get('exclude', []) }
             #single file as string
             if isinstance(files, str):
                 item['traits'][k]["files"] = {"condition":[], "path": [files]}
@@ -101,7 +101,7 @@ for item in collection:
                         match_files = {"condition":[], "path": [f]}
                 item['traits'][k]["files"] = match_files
             #check excluded
-            for e in item['traits'][k]['excluded']:
+            for e in item['traits'][k]['exclude']:
                 for _,t in original_traits.items():
                     if t == e:
                         del item['traits'][k]
